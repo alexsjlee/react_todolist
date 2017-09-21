@@ -1,0 +1,12 @@
+.loader {
+  text-align: center;
+  margin: 10% 0;
+}
+
+.todoTitle {
+  font-weight: 500;
+}
+
+.inputValidate {
+  color: red;
+}
