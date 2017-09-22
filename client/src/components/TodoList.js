@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchTodos } from '../actions';
+import { fetchTodos, editTodo, deleteTodo } from '../actions';
 
 class TodoList extends Component {
   componentDidMount() {
     this.props.fetchTodos();
+  }
+
+  toggleComplete(todo, boolean) {
+    const toggled = { ...todo, completed: !boolean };
+    this.props.editTodo(toggled).then(() => this.props.fetchTodos());
+  }
+
+  handleDelete(id) {
+    this.props.deleteTodo(id).then(() => this.props.fetchTodos());
   }
 
   renderTodos() {
@@ -32,21 +41,30 @@ class TodoList extends Component {
       return (
         <tr key={todo._id}>
           <td>
-            <div>
-              <i className="material-icons">check_box_outline_blank</i>
+            <div onClick={() => this.toggleComplete(todo, todo.completed)}>
+              {todo.completed ? (
+                <i className="material-icons">check</i>
+              ) : (
+                <i className="material-icons">check_box_outline_blank</i>
+              )}
             </div>
           </td>
           <td>
-            <p>
-              <span className='todoTitle'>{todo.title}</span>
+            <p className={todo.completed ? 'strikethrough' : ''}>
+              <span className="todoTitle">{todo.title}</span>
               <br />
               {todo.date}
             </p>
           </td>
           <td>
-            <div className='right'>
+            <div className="right">
               <i className="material-icons">edit</i>
-              <i className="material-icons">delete</i>
+              <i
+                className="material-icons"
+                onClick={() => this.handleDelete(todo._id)}
+              >
+                delete
+              </i>
             </div>
           </td>
         </tr>
@@ -73,4 +91,6 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { fetchTodos })(TodoList);
+export default connect(mapStateToProps, { fetchTodos, editTodo, deleteTodo })(
+  TodoList
+);

@@ -62,4 +62,29 @@ module.exports = app => {
       res.status(400).send(err);
     }
   });
+
+  // DELETE all completed todos
+  app.delete('/api/todos/completed', async (req, res) => {
+    const deleteCompleted = await Todo.remove({ completed: true })
+      // .remove()
+      .exec();
+
+    try {
+      res.send(deleteCompleted);
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  });
+
+  // DELETE a specific todo with _id
+  app.delete('/api/todos/:id', async (req, res) => {
+    const id = await req.params.id;
+    const deletedTodo = await Todo.findByIdAndRemove(id);
+
+    try {
+      res.send(deletedTodo);
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  });
 };
